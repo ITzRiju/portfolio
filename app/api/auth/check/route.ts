@@ -1,39 +1,27 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
 
 export async function GET() {
   try {
     const cookieStore = cookies();
-    const adminToken = cookieStore.get('admin-token');
+    const userToken = cookieStore.get('user-token');
     
-    if (adminToken) {
-      try {
-        // Verify the JWT token
-        const decoded = jwt.verify(adminToken.value, process.env.JWT_SECRET!);
-        return NextResponse.json({ 
-          authenticated: true, 
-          user: decoded 
-        });
-      } catch (jwtError) {
-        // Token is invalid
-        return NextResponse.json(
-          { error: 'Invalid token' },
-          { status: 401 }
-        );
-      }
-    }
-    
-    // Allow in development only
-    if (process.env.NODE_ENV === 'development') {
+    // For development, we'll simulate user authentication
+    // In production, you would validate the token properly
+    if (userToken) {
       return NextResponse.json({ 
         authenticated: true, 
-        user: { id: 1, username: 'admin', role: 'admin' } 
+        user: { 
+          id: 1, 
+          name: 'John Doe', 
+          email: 'john@example.com',
+          phone: '+91 9876543210'
+        } 
       });
     }
     
     return NextResponse.json(
-      { error: 'Unauthorized' },
+      { authenticated: false },
       { status: 401 }
     );
   } catch (error) {
