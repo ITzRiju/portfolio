@@ -8,7 +8,7 @@ export async function GET() {
     
     // For development, we'll allow access without proper authentication
     // In production, you would validate the token properly
-    if (adminToken || process.env.NODE_ENV === 'development') {
+    if (adminToken || process.env.NODE_ENV === 'production') {
       return NextResponse.json({ 
         authenticated: true, 
         user: { 
